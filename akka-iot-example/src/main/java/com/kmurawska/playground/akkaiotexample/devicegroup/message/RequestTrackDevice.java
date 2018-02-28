@@ -20,4 +20,8 @@ public class RequestTrackDevice {
     public String getDeviceId() {
         return deviceId;
     }
+
+    public boolean isRequestFor(String groupId) {
+        return this.groupId.equals(groupId);
+    }
 }

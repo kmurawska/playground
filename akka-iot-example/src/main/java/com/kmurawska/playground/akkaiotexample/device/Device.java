@@ -31,19 +31,13 @@ public class Device extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(RequestTrackDevice.class, r -> {
-                    handleRequestTrackDevice(r);
-                })
-                .match(ReadTemperature.class, r -> {
-                    handleReadTemperature(r);
-                })
-                .match(RecordTemperature.class, r -> {
-                    handleRecordTemperature(r);
-                })
+                .match(RequestTrackDevice.class, this::onTrackDeviceRequest)
+                .match(ReadTemperature.class, this::onReadTemperature)
+                .match(RecordTemperature.class, this::onRecordTemperature)
                 .build();
     }
 
-    private void handleRequestTrackDevice(RequestTrackDevice r) {
+    private void onTrackDeviceRequest(RequestTrackDevice r) {
         if (groupAndDeviceMatch(r)) {
             getSender().tell(new DeviceRegistered(r.getTrackingId()), getSelf());
         } else {
@@ -55,13 +49,13 @@ public class Device extends AbstractActor {
         return groupId.equals(r.getGroupId()) && deviceId.equals(r.getDeviceId());
     }
 
-    private void handleRecordTemperature(RecordTemperature r) {
+    private void onRecordTemperature(RecordTemperature r) {
         log.info("Recorder temperature reading {} with {}", r.getValue(), r.getTrackingId());
         lastTemperatureReading = Optional.of(r.getValue());
         getSender().tell(new TemperatureRecorded(r.getTrackingId()), getSelf());
     }
 
-    private void handleReadTemperature(ReadTemperature r) {
+    private void onReadTemperature(ReadTemperature r) {
         getSender().tell(new RespondTemperature(r.getTrackingId(), lastTemperatureReading), getSelf());
     }
 
