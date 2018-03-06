@@ -24,19 +24,26 @@ public class TransformationWorker extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
+                .match(CurrentClusterState.class, this::onCurrentClusterState)
                 .match(MemberUp.class, this::onMemberUp)
                 .match(TransformationJob.class, this::onTransformationJob)
-                .match(CurrentClusterState.class, this::onCurrentClusterState)
                 .build();
     }
 
-    private void onMemberUp(MemberUp memberUp) {
-        registerMember(memberUp.member());
+    private void onCurrentClusterState(CurrentClusterState state) {
+        state.getMembers().forEach(m -> {
+            if (MemberStatus.up().equals(m.status())) {
+                registerMember(m);
+            }
+        });
     }
 
     private void registerMember(Member member) {
         getContext().actorSelection(member.address() + "/user/transformation-client").tell(new WorkerRegistration(), self());
+    }
 
+    private void onMemberUp(MemberUp memberUp) {
+        registerMember(memberUp.member());
     }
 
     private void onTransformationJob(TransformationJob job) {
@@ -46,14 +53,6 @@ public class TransformationWorker extends AbstractActor {
 
     private String transform(String text) {
         return text.toUpperCase();
-    }
-
-    private void onCurrentClusterState(CurrentClusterState state) {
-        state.getMembers().forEach(m -> {
-            if (MemberStatus.up().equals(m.status())) {
-                registerMember(m);
-            }
-        });
     }
 
     @Override

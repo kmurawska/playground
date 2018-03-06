@@ -10,10 +10,10 @@ import com.typesafe.config.ConfigFactory;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.typesafe.config.ConfigFactory.parseString;
+import static java.util.UUID.randomUUID;
 
 public class TransformationClientApp {
     public static void main(String[] args) {
@@ -28,6 +28,6 @@ public class TransformationClientApp {
         final ActorRef transformationClient = system.actorOf(Props.create(TransformationClient.class), "transformation-client");
         final FiniteDuration interval = Duration.create(2, TimeUnit.SECONDS);
 
-        system.scheduler().schedule(interval, interval, () -> transformationClient.tell(new TransformationJob(UUID.randomUUID().toString(), "Text-" + UUID.randomUUID().toString()), transformationClient), system.dispatcher());
+        system.scheduler().schedule(interval, interval, () -> transformationClient.tell(new TransformationJob(randomUUID().toString(), "Text-" + randomUUID().toString()), ActorRef.noSender()), system.dispatcher());
     }
 }
