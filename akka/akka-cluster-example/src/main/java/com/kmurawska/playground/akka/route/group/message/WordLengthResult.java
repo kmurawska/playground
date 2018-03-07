@@ -3,9 +3,11 @@ package com.kmurawska.playground.akka.route.group.message;
 import java.io.Serializable;
 
 public class WordLengthResult implements Serializable {
+    private final String trackingId;
     private final double length;
 
-    public WordLengthResult(double length) {
+    public WordLengthResult(String trackingId, double length) {
+        this.trackingId = trackingId;
         this.length = length;
     }
 
@@ -16,7 +18,8 @@ public class WordLengthResult implements Serializable {
     @Override
     public String toString() {
         return "WordLengthResult{" +
-                "length=" + length +
+                "trackingId='" + trackingId + '\'' +
+                ", length=" + length +
                 '}';
     }
 }

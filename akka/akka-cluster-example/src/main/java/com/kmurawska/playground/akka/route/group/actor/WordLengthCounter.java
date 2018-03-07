@@ -13,7 +13,7 @@ public class WordLengthCounter extends AbstractActor {
                 .build();
     }
 
-    private void onWordToCount(CalculateWordLengthJob word) {
-        getSender().tell(new WordLengthResult(word.getText().length()), getSelf());
+    private void onWordToCount(CalculateWordLengthJob job) {
+        getSender().tell(new WordLengthResult(job.getTrackingId(), job.getText().length()), getSelf());
     }
 }

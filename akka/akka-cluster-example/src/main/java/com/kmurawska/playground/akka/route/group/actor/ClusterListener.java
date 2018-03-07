@@ -18,13 +18,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class SentenceStatisticClient extends AbstractActor {
+public class ClusterListener extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     private final String servicePath;
     private final Set<Address> nodes = new HashSet<>();
     private Cluster cluster = Cluster.get(getContext().system());
 
-    public SentenceStatisticClient(String servicePath) {
+    public ClusterListener(String servicePath) {
         this.servicePath = servicePath;
     }
 
@@ -97,6 +97,5 @@ public class SentenceStatisticClient extends AbstractActor {
     @Override
     public void postStop() {
         cluster.unsubscribe(self());
-        // tickTask.cancel();
     }
 }

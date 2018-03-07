@@ -36,13 +36,13 @@ public class AverageCalculator extends AbstractActor {
         if (results.size() != numberOfWords) return;
 
         results.stream().mapToDouble(WordLengthResult::getLength).average().ifPresent(a -> {
-            replyTo.tell(new SentenceAverageResult(a), getSelf());
+            replyTo.tell(new SentenceAverageResult(job.getTrackingId(), a), getSelf());
             context().stop(getSelf());
         });
     }
 
     private void onReceiveTimeout(ReceiveTimeout timeout) {
-        replyTo.tell(new SentenceStatisticFailed("Service unavailable, try again later", job), getSelf());
+        replyTo.tell(new SentenceStatisticFailed(job.getTrackingId(), "Service unavailable, try again later"), getSelf());
         context().stop(getSelf());
     }
 }
