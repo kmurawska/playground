@@ -1,12 +1,12 @@
-package com.kmurawska.playground.akka.route.group.actor;
+package com.kmurawska.playground.akka.routing.sentence.actor;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.ReceiveTimeout;
-import com.kmurawska.playground.akka.route.group.message.CalculateSentenceAverageJob;
-import com.kmurawska.playground.akka.route.group.message.SentenceAverageResult;
-import com.kmurawska.playground.akka.route.group.message.SentenceStatisticFailed;
-import com.kmurawska.playground.akka.route.group.message.WordLengthResult;
+import com.kmurawska.playground.akka.routing.sentence.message.CalculateSentenceAverageJob;
+import com.kmurawska.playground.akka.routing.sentence.message.SentenceAverageResult;
+import com.kmurawska.playground.akka.routing.sentence.message.SentenceStatisticFailed;
+import com.kmurawska.playground.akka.routing.sentence.message.WordLengthResult;
 
 import java.util.ArrayList;
 import java.util.List;

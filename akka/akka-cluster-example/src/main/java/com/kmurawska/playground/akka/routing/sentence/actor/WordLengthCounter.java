@@ -1,8 +1,8 @@
-package com.kmurawska.playground.akka.route.group.actor;
+package com.kmurawska.playground.akka.routing.sentence.actor;
 
 import akka.actor.AbstractActor;
-import com.kmurawska.playground.akka.route.group.message.CalculateWordLengthJob;
-import com.kmurawska.playground.akka.route.group.message.WordLengthResult;
+import com.kmurawska.playground.akka.routing.sentence.message.CalculateWordLengthJob;
+import com.kmurawska.playground.akka.routing.sentence.message.WordLengthResult;
 
 public class WordLengthCounter extends AbstractActor {
 

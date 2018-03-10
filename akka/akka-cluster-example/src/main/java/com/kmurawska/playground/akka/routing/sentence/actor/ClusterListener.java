@@ -1,4 +1,4 @@
-package com.kmurawska.playground.akka.route.group.actor;
+package com.kmurawska.playground.akka.routing.sentence.actor;
 
 import akka.actor.AbstractActor;
 import akka.actor.Address;
@@ -9,9 +9,9 @@ import akka.cluster.Member;
 import akka.cluster.MemberStatus;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import com.kmurawska.playground.akka.route.group.message.CalculateSentenceAverageJob;
-import com.kmurawska.playground.akka.route.group.message.SentenceAverageResult;
-import com.kmurawska.playground.akka.route.group.message.SentenceStatisticFailed;
+import com.kmurawska.playground.akka.routing.sentence.message.CalculateSentenceAverageJob;
+import com.kmurawska.playground.akka.routing.sentence.message.SentenceAverageResult;
+import com.kmurawska.playground.akka.routing.sentence.message.SentenceStatisticFailed;
 
 import java.util.ArrayList;
 import java.util.HashSet;

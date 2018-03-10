@@ -1,4 +1,4 @@
-package com.kmurawska.playground.akka.route.group.message;
+package com.kmurawska.playground.akka.routing.sentence.message;
 
 import java.io.Serializable;
 
