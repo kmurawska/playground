@@ -23,7 +23,7 @@ public class SentenceStatisticService extends AbstractActor {
     }
 
     private void onCalculateSentenceAverageJob(CalculateSentenceAverageJob job) {
-        log.info("----" + job);
+        log.info("---" + getSelf().path().name() + " " + job);
         ActorRef averageCalculator = getContext().actorOf(Props.create(AverageCalculator.class, job, getSender()));
         Stream.of(job.getWords())
                 .forEach(w -> router.tell(new CalculateWordLengthJob(job.getTrackingId(), w), averageCalculator));

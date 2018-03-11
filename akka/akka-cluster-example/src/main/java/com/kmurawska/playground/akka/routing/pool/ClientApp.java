@@ -18,7 +18,7 @@ public class ClientApp {
         ActorSystem system = ActorSystem.create("ClusterSystem", ConfigFactory.load("route-pool"));
         ActorRef actor = system.actorOf(Props.create(ClusterListener.class, "/user/sentence-statistics-service"), "client");
 
-        final FiniteDuration interval = Duration.create(2, TimeUnit.SECONDS);
+        final FiniteDuration interval = Duration.create(5, TimeUnit.SECONDS);
 
         system.scheduler().schedule(interval, interval, () -> actor.tell(new CalculateSentenceAverageJob(UUID.randomUUID().toString(), new SentenceGenerator().generate()), actor), system.dispatcher());
     }

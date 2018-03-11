@@ -1,9 +1,9 @@
-package com.kmurawska.playground.akka.routing.group;
+package com.kmurawska.playground.akka.adaptiveloadbalancing;
 
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import com.kmurawska.playground.akka.routing.sentence.actor.SentenceStatisticService;
-import com.kmurawska.playground.akka.routing.sentence.actor.WordLengthCounter;
+import com.kmurawska.playground.akka.adaptiveloadbalancing.actor.FactorialCalculator;
+import com.kmurawska.playground.akka.adaptiveloadbalancing.actor.MetricsListener;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -19,14 +19,12 @@ public class WorkerApp {
     private static void start(String... ports) {
         Stream.of(ports).forEach(p -> {
             Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + p + "\n" + "akka.remote.artery.canonical.port=" + p)
-                    .withFallback(ConfigFactory.parseString("akka.cluster.roles = [compute]"))
-                    .withFallback(ConfigFactory.load("route-group"));
+                    .withFallback(ConfigFactory.parseString("akka.cluster.roles = [factorial-compute]"))
+                    .withFallback(ConfigFactory.load("adaptive-load-balancing"));
 
             ActorSystem system = ActorSystem.create("ClusterSystem", config);
-            system.actorOf(Props.create(WordLengthCounter.class), "word-length-worker-1");
-            system.actorOf(Props.create(WordLengthCounter.class), "word-length-worker-2");
-
-            system.actorOf(Props.create(SentenceStatisticService.class), "sentence-statistics-service");
+            system.actorOf(Props.create(FactorialCalculator.class), "factorial-calculator");
+            system.actorOf(Props.create(MetricsListener.class), "metrics-listener");
         });
     }
 }
