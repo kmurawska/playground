@@ -9,7 +9,6 @@ import akka.event.LoggingAdapter;
 import akka.routing.FromConfig;
 import com.kmurawska.playground.akka.adaptiveloadbalancing.message.FactorialJob;
 import com.kmurawska.playground.akka.adaptiveloadbalancing.message.FactorialResult;
-import com.kmurawska.playground.akka.routing.sentence.actor.WordLengthCounter;
 import scala.concurrent.duration.Duration;
 
 import java.util.UUID;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class FactorialClient extends AbstractActor {
     private final int upToN;
     private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
-    private ActorRef router = getContext().actorOf(FromConfig.getInstance().props(Props.create(WordLengthCounter.class)), "factorial-router");
+    private ActorRef router = getContext().actorOf(FromConfig.getInstance().props(Props.create(FactorialCalculator.class)), "factorial-router");
 
     public FactorialClient(int upToN) {
         this.upToN = upToN;
