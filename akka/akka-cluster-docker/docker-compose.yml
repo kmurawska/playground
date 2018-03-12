@@ -1,0 +1,53 @@
+version: '3'
+
+networks:
+  factorial_network:
+
+services:
+  calculator-seed-node-1:
+    container_name: calculator-seed-node-1
+    image: acd-seed-node
+    environment:
+      - cluster_name=ClusterSystem
+      - seed_node_name=calculator-seed-node-1
+      - seed_node_port=2551
+      - seed_nodes=calculator-seed-node-1:2551,calculator-seed-node-2:2552,requestor-seed-node-1:2553
+    ports:
+      - 2551:2551
+    command: java -cp /home/akka-cluster-docker.jar com.kmurawska.playground.akka.clusterondocker.FactorialCalculatorApp
+    volumes:
+      - /mnt/sda1/shm:/dev/shm
+    networks:
+      - factorial_network
+
+  calculator-seed-node-2:
+    container_name: calculator-seed-node-2
+    image: acd-seed-node
+    environment:
+       - cluster_name=ClusterSystem
+       - seed_node_name=calculator-seed-node-2
+       - seed_node_port=2552
+       - seed_nodes=calculator-seed-node-1:2551,calculator-seed-node-2:2552,requestor-seed-node-1:2553
+    ports:
+      - 2552:2552
+    command: java -cp /home/akka-cluster-docker.jar com.kmurawska.playground.akka.clusterondocker.FactorialCalculatorApp
+    volumes:
+      - /mnt/sda1/shm:/dev/shm
+    networks:
+      - factorial_network
+
+  requestor-seed-node-1:
+    container_name: requestor-seed-node-1
+    image: acd-seed-node
+    environment:
+      - cluster_name=ClusterSystem
+      - seed_node_name=requestor-seed-node-1
+      - seed_node_port=2553
+      - seed_nodes=calculator-seed-node-1:2551,calculator-seed-node-2:2552,requestor-seed-node-1:2553
+    ports:
+      - 2553:2553
+    command: java -cp /home/akka-cluster-docker.jar com.kmurawska.playground.akka.clusterondocker.FactorialRequestorApp
+    volumes:
+      - /mnt/sda1/shm:/dev/shm
+    networks:
+      - factorial_network
