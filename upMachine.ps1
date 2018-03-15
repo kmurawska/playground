@@ -29,12 +29,8 @@ if ($dockerMachines -Like "*playground*") {
     docker-machine start $machineName
 
 	echo "Setting ports forwarding on Oracle VirtualBox machine..."
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "CA,tcp,,7054,,7054"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "orderer,tcp,,7050,,7050"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "peer0,tcp,,7051,,7051"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "peer0_events,tcp,,7053,,7053"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "peer1,tcp,,7151,,7151"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "peer1_events,tcp,,7153,,7153"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,9042,,9042"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra JMX,tcp,,7199,,7199"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName
