@@ -6,7 +6,9 @@ networks:
 services:
   calculator-seed-node-1:
     container_name: calculator-seed-node-1
-    image: acd-seed-node
+    image: factorial-akka-node
+    build:
+      context: .
     environment:
       - cluster_name=ClusterSystem
       - seed_node_name=calculator-seed-node-1
@@ -22,7 +24,9 @@ services:
 
   calculator-seed-node-2:
     container_name: calculator-seed-node-2
-    image: acd-seed-node
+    image: factorial-akka-node
+    build:
+      context: .
     environment:
        - cluster_name=ClusterSystem
        - seed_node_name=calculator-seed-node-2
@@ -38,7 +42,9 @@ services:
 
   requestor-seed-node-1:
     container_name: requestor-seed-node-1
-    image: acd-seed-node
+    image: factorial-akka-node
+    build:
+      context: .
     environment:
       - cluster_name=ClusterSystem
       - seed_node_name=requestor-seed-node-1
