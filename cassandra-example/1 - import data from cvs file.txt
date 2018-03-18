@@ -1,0 +1,27 @@
+1. Create keyspace
+CREATE KEYSPACE killrvideo
+WITH REPLICATION = {
+  'class':'SimpleStrategy',
+  'replication_factor':1
+};
+
+2. Swich to killrvideo keyspace
+USE killrvideo;
+
+3. Create table videos
+CREATE TABLE videos (
+	video_id timeuuid PRIMARY KEY,
+	added_date timestamp,
+	description text, 
+	title text,
+	user_id uuid,
+	primary key(video_id) 
+);
+
+4.Import data from csv file
+a) copy to docker-container: docker cp .\data\1\videos.csv cassandra-node-1:/ 
+b) import data to videos table: COPY videos FROM 'videos.csv' WITH HEADER=true; (header=true - skips the first line in the file)
+
+5. Run queries:
+a) SELECT * FROM videos LIMIT 10;
+b) SELECT count(*) FROM videos;
