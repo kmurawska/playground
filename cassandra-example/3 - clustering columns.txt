@@ -52,7 +52,7 @@ SELECT COUNT(*) FROM bad_videos_by_tag_year; = 422
 The number of rows in the bad_videos_by_tag_year table doesn't match the number of rows imported from videos_by_tag_year.csv. videos_by_tag_year.csv duplicates video_id
 for each unique tag and year per video, Cassandra upserted several records during the COPY.
 
-5.Drop bad_videos_by_tag_year 
+5. Drop bad_videos_by_tag_year 
 DROP TABLE bad_videos_by_tag_year;
 
 6. Create table to facilitate querying for videos by tag within a given year range returning the results in descending order of added year.
@@ -99,7 +99,7 @@ COPY videos_by_tag_year FROM 'videos_by_tag_year.csv' WITH HEADER=true;
 797 rows imported from 1 files in 0.880 seconds (0 skipped).
 SELECT COUNT(*) FROM videos_by_tag_year;  = 797
 
-7. Run queries:
+8. Run queries:
 a) SELECT * FROM videos_by_tag_year WHERE tag = 'trailer' AND added_year = 2015;
 b) SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year = 2014;
 c) SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year < 2015;

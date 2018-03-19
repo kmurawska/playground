@@ -8,7 +8,7 @@ TRUNCATE videos;
 ALTER TABLE videos ADD tags SET<text>;
 DESCRIBE TABLE videos;
 
-4.Import data from csv file
+4. Import data from csv file
 a) docker cp .\data\4\videos.csv cassandra-node-1:/
 b) COPY videos FROM 'videos.csv' WITH HEADER=true;
 
