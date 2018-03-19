@@ -23,7 +23,7 @@ CREATE TABLE videos_by_title_year (
 	primary key((title, added_year))
 );
 
-3.Import data from csv file
+3. Load the data from the videos_by_title_year.csv file
 a) docker cp .\data\2\videos_by_title_year.csv cassandra-node-1:/
 b) COPY videos_by_title_year FROM 'videos_by_title_year.csv' WITH HEADER=true;
 

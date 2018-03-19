@@ -41,7 +41,7 @@ CREATE TABLE killrvideo.bad_videos_by_tag_year (
 
 Column order differs from the CREATE TABLE statement. Cassandra orders columns by partition key, clustering columns and then alphabetical order of the remaining columns.
 
-4.Import data from csv file
+4. Load the data from the videos_by_tag_year.csv file
 a) docker cp .\data\3\videos_by_tag_year.csv cassandra-node-1:/
 b) COPY bad_videos_by_tag_year (tag, added_year, video_id, added_date, description, title, user_id) FROM 'videos_by_tag_year.csv' WITH HEADER=true;
 Explicitly list the column names - table schema no matches the csv file structure.
@@ -93,7 +93,7 @@ CREATE TABLE killrvideo.videos_by_tag_year (
     AND read_repair_chance = 0.0
     AND speculative_retry = '99PERCENTILE';
 
-6. Load data from csv file
+7. Load the data from the videos_by_tag_year.csv file
 COPY videos_by_tag_year FROM 'videos_by_tag_year.csv' WITH HEADER=true;
 
 797 rows imported from 1 files in 0.880 seconds (0 skipped).
