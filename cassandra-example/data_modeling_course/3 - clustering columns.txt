@@ -1,0 +1,109 @@
+1. Swich to killrvideo keyspace
+USE killrvideo;
+
+2. Create table bad_videos_by_tag_year
+CREATE TABLE bad_videos_by_tag_year (
+	tag text,
+	added_year int,
+	added_date timestamp,
+	title text,
+	description text, 
+	user_id uuid,
+	video_id timeuuid,
+	primary key((video_id))
+);
+
+3. View the stucture of bad_videos_by_tag_year table
+DESCRIBE TABLE bad_videos_by_tag_year;                                                                                               
+                                                                                                                                                       
+CREATE TABLE killrvideo.bad_videos_by_tag_year (                                                                                                       
+    video_id timeuuid PRIMARY KEY,                                                                                                                     
+    added_date timestamp,                                                                                                                              
+    added_year int,                                                                                                                                    
+    description text,                                                                                                                                  
+    tag text,                                                                                                                                          
+    title text,                                                                                                                                        
+    user_id uuid                                                                                                                                       
+) WITH bloom_filter_fp_chance = 0.01                                                                                                                   
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}                                                                                        
+    AND comment = ''                                                                                                                                   
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}         
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}                                          
+    AND crc_check_chance = 1.0                                                                                                                         
+    AND dclocal_read_repair_chance = 0.1                                                                                                               
+    AND default_time_to_live = 0                                                                                                                       
+    AND gc_grace_seconds = 864000                                                                                                                      
+    AND max_index_interval = 2048                                                                                                                      
+    AND memtable_flush_period_in_ms = 0                                                                                                                
+    AND min_index_interval = 128                                                                                                                       
+    AND read_repair_chance = 0.0                                                                                                                       
+    AND speculative_retry = '99PERCENTILE';     
+
+Column order differs from the CREATE TABLE statement. Cassandra orders columns by partition key, clustering columns and then alphabetical order of the remaining columns.
+
+4. Load the data from the videos_by_tag_year.csv file
+a) docker cp .\data\3\videos_by_tag_year.csv cassandra-node-1:/
+b) COPY bad_videos_by_tag_year (tag, added_year, video_id, added_date, description, title, user_id) FROM 'videos_by_tag_year.csv' WITH HEADER=true;
+Explicitly list the column names - table schema no matches the csv file structure.
+
+797 rows imported from 1 files in 0.672 seconds (0 skipped).
+SELECT COUNT(*) FROM bad_videos_by_tag_year; = 422
+
+The number of rows in the bad_videos_by_tag_year table doesn't match the number of rows imported from videos_by_tag_year.csv. videos_by_tag_year.csv duplicates video_id
+for each unique tag and year per video, Cassandra upserted several records during the COPY.
+
+5. Drop bad_videos_by_tag_year 
+DROP TABLE bad_videos_by_tag_year;
+
+6. Create table to facilitate querying for videos by tag within a given year range returning the results in descending order of added year.
+CREATE TABLE videos_by_tag_year (
+	tag text,
+	added_year int,
+	video_id timeuuid,
+	added_date timestamp,
+	description text, 
+	title text,
+	user_id uuid,
+	primary key((tag), added_year, video_id)
+) WITH CLUSTERING ORDER BY (added_year DESC);
+
+DESCRIBE TABLE videos_by_tag_year;
+CREATE TABLE killrvideo.videos_by_tag_year (
+    tag text,
+    added_year int,
+    video_id timeuuid,
+    added_date timestamp,
+    description text,
+    title text,
+    user_id uuid,
+    PRIMARY KEY (tag, added_year, video_id)
+) WITH CLUSTERING ORDER BY (added_year DESC, video_id ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = {'keys': 'ALL', 'rows_per_partition': 'NONE'}
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy', 'max_threshold': '32', 'min_threshold': '4'}
+    AND compression = {'chunk_length_in_kb': '64', 'class': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND crc_check_chance = 1.0
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99PERCENTILE';
+
+7. Load the data from the videos_by_tag_year.csv file
+COPY videos_by_tag_year FROM 'videos_by_tag_year.csv' WITH HEADER=true;
+
+797 rows imported from 1 files in 0.880 seconds (0 skipped).
+SELECT COUNT(*) FROM videos_by_tag_year;  = 797
+
+8. Run queries:
+a) SELECT * FROM videos_by_tag_year WHERE tag = 'trailer' AND added_year = 2015;
+b) SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year = 2014;
+c) SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year < 2015;
+d) SELECT * FROM videos_by_tag_year WHERE added_year < 2015; - Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING
+e) SELECT * FROM videos_by_tag_year WHERE tag = 'cql';
+
+Range queries can be performed only on clustering columns.

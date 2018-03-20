@@ -1,0 +1,32 @@
+1. Swich to killrvideo keyspace
+USE killrvideo;
+
+2. Erase the data from the videos table
+TRUNCATE videos;
+
+3. Alter videos table to add tags column 
+ALTER TABLE videos ADD tags SET<text>;
+DESCRIBE TABLE videos;
+
+4. Import data from csv file
+a) docker cp .\data\4\videos.csv cassandra-node-1:/
+b) COPY videos FROM 'videos.csv' WITH HEADER=true;
+
+5. Create a user defined type video_encoding
+CREATE TYPE video_encoding (
+	bit_rate set<text>,
+	encoding text,
+	height int,
+	width int
+);
+
+6. Alter table videos to add an encoding column of the video_encoding type
+ALTER TABLE videos ADD encoding frozen<video_encoding>;
+DESCRIBE TABLE videos;
+
+7. Load data from videos_encoding.csv to
+a) docker cp .\data\4\videos_encoding.csv cassandra-node-1:/
+b) COPY videos (video_id, encoding) FROM 'videos_encoding.csv' WITH HEADER=true;
+
+8. Run queries:
+a) SELECT * FROM videos LIMIT 10;

@@ -1,0 +1,31 @@
+SELECT * 
+FROM videos
+WHERE title = 'The Orginal Grumpy Cat';
+
+SELECT * 
+FROM videos 
+WHERE added_date < '2015-05-01';
+
+InvalidRequest: Error from server: code=2200 [Invalid query] message="Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. 
+If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING"
+
+1. Swich to killrvideo keyspace
+USE killrvideo;
+
+2. Create table videos_by_title_year
+CREATE TABLE videos_by_title_year (
+	title text,
+	added_year int,
+	added_date timestamp,
+	description text, 
+	user_id uuid,
+	video_id timeuuid,
+	primary key((title, added_year))
+);
+
+3. Load the data from the videos_by_title_year.csv file
+a) docker cp .\data\2\videos_by_title_year.csv cassandra-node-1:/
+b) COPY videos_by_title_year FROM 'videos_by_title_year.csv' WITH HEADER=true;
+
+4. Run query:
+SELECT * FROM videos_by_title_year  WHERE title = 'Sleepy Grumpy Cat' AND added_year = 2015;
