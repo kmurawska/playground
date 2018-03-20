@@ -57,7 +57,7 @@ Prerequisites:
   * `SELECT COUNT(*) FROM videos;`
 
 
-### 2. Composite Partition Keys
+### 2. Composite partition keys
   * Create a new table that allows querying videos by title and year using a composite partition key
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
@@ -94,7 +94,16 @@ Prerequisites:
 	Notes: 
 	The last two queries result in:  *Cannot execute this query as it might involve data filtering and thus may have unpredictable 		performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING*. 
 	Cassandra requires all the partition key columns (or none of them) in WHERE condition. Cassandra needs all partition key columns 	to be able to compute the hash which allows to locate the node containing the partition and thus data.
-	
+
+
+### 3. Clustering columns
+  * Create a *videos_by_tag_year* table that allows range scans and ordering by year
+  
+1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
+
+	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
+
+
 	
 ### User-defined types and collections.
 1. Swich to killrvideo keyspace
