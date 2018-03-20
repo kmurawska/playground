@@ -22,10 +22,10 @@ Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\video
 
 3. Create *killrvideo* keyspace 
 
-	`CREATE KEYSPACE killrvideo WITH REPLICATION = {
+	```CREATE KEYSPACE killrvideo WITH REPLICATION = {
 	  'class':'SimpleStrategy',
 	  'replication_factor':1
-	};`
+	};```
 
 
 4. Create a *videos* table
