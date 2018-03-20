@@ -40,7 +40,6 @@ WITH REPLICATION = {
 );`
 
 4. Load data from videos.csv into the *videos* table
-
 `COPY videos FROM 'videos.csv' WITH HEADER=true;`
 
 (`HEADER=true` - skips the first line in the file)
