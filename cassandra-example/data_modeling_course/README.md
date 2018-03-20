@@ -42,7 +42,7 @@ Prerequisites:
 	);
 	```
 
-4. Load the data from *videos.csv* file into the *videos* table
+4. Load the data from the *videos.csv* file into the *videos* table
 
 	`COPY videos FROM 'data/1/videos.csv' WITH HEADER=true;`
 	
@@ -81,7 +81,7 @@ Prerequisites:
 		primary key((title, added_year))
 	);
 	```
-3. Load the data from *videos_by_title_year.csv* file into the *videos_by_title_year* table
+3. Load the data from the *videos_by_title_year.csv* file into the *videos_by_title_year* table
 
 	`COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;`
 
@@ -118,7 +118,7 @@ Prerequisites:
 3. Alter the *videos* table to add a *tags* column of the SET type
 	```ALTER TABLE videos ADD tags SET<text>;```
 
-4. Load the data from *videos.csv* into the *videos* table
+4. Load the data from the *videos.csv* into the *videos* table
 
 	`COPY videos FROM 'data/4/videos.csv' WITH HEADER=true;`
 
@@ -136,12 +136,46 @@ Prerequisites:
 6. Alter the *videos* table to add an *encoding* column of the *video_encoding* type
 	```ALTER TABLE videos ADD encoding frozen<video_encoding>;```
 
-7. Load the data from videos_encoding.csv file into the *videos* table
+7. Load the data from the *videos_encoding.csv* file into the *videos* table
 
 	`COPY videos (video_id, encoding) FROM 'data/4/videos_encoding.csv' WITH HEADER=true;`
 
 8. Run a query to retrieve the first 10 rows of the videos table:
 	`SELECT * FROM videos LIMIT 10;`
+
+
+### 5. Using counters In CQL
+  * Create a new table that makes use of the counter type
+  * Load the newly created table with data
+  * Run queries against the table to test counter functionality
+
+1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
+
+	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
+	
+2. Create a *videos_count_by_tag* table with a column *video_count* which uses of a counter type to store the video count
+
+	```
+	CREATE TABLE videos_count_by_tag (
+		tag text,
+		added_year int,
+		video_count counter,
+		primary key((tag), added_year)
+	);
+	```
+
+3. Load the data from the *videos_count_by_tag.cql* file 
+
+	`SOURCE 'data/5/videos_count_by_tag.cql'`
+	
+4. Run a query to display each tag and the count of videos for each
+	`SELECT * FROM videos_count_by_tag LIMIT 5;`
+
+5. Add another a tag for another video and increment the video count for this tag
+	`UPDATE videos_count_by_tag SET video_count = video_count + 10 WHERE tag = 'You Are Awesome' AND added_year = 2015;`
+
+6. Query the newly added row
+	`SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';`
 
 #### Denormalized Tables
 The data model must support the following queries:
