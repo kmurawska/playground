@@ -31,17 +31,20 @@ Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\video
 
 
 4. Create a *videos* table
-
-	`CREATE TABLE videos (
+		
+	```
+	CREATE TABLE videos (
 		video_id timeuuid,
 		added_date timestamp,
 		description text, 
 		title text,
 		user_id uuid,
 		PRIMARY KEY (video_id)
-	);`
+	);
+	```
 
 4. Load data from videos.csv into the *videos* table
+
 	`COPY videos FROM 'videos.csv' WITH HEADER=true;`
 
 	(`HEADER=true` - skips the first line in the file)
