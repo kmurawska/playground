@@ -80,7 +80,6 @@ Prerequisites:
 	```
 	COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;
 	```
-
 4. Run following queries on the *videos_by_title_year* table:
   * `SELECT * FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND added_year = 2014;`
   * `SELECT * FROM videos_by_title_year WHERE title = 'Sleepy Grumpy Cat' AND added_year = 2015;`
@@ -99,8 +98,66 @@ Prerequisites:
 	```
 	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
 	```
+2. Create a *bad_videos_by_tag_year* table
+	```
+	CREATE TABLE bad_videos_by_tag_year (
+		tag text,
+		added_year int,
+		added_date timestamp,
+		title text,
+		description text, 
+		user_id uuid,
+		video_id timeuuid,
+		primary key((video_id))
+	);
+	```
+3. View the stucture of the *bad_videos_by_tag_year* table
+	```
+	DESCRIBE TABLE bad_videos_by_tag_year;
+	```
+	Notes:
+	The column order differs from the CREATE TABLE statement. Cassandra orders columns by partition key, clustering columns and then alphabetical order of the remaining columns.
+	
+4. Load the data from the *videos_by_tag_year.csv* file into the *bad_videos_by_tag_year* table
+	```
+	COPY bad_videos_by_tag_year (tag, added_year, video_id, added_date, description, title, user_id) FROM 'data/3/videos_by_tag_year.csv' WITH HEADER=true;
+	```
+	Notes:
+	  * Column names should be listed explicitly since the *bad_videos_by_tag_year* table schema no matches the csv file structure.
+	  * Compare the number of imported rows and the number of rows in the *bad_videos_by_tag_year*. The number of rows in the *bad_videos_by_tag_year* table doesn't match the number of rows imported from the *videos_by_tag_year.csv*. The *videos_by_tag_year.csv* file
+		duplicates *video_id* for each unique *tag* and year per video so Cassandra upserted several records during the COPY - *video_id* is not a proper partition key for this scenario.
 
+5. Drop the *bad_videos_by_tag_year* table
+ 	```
+	DROP TABLE bad_videos_by_tag_year;
+	```
+6. Create a table to facilitate querying for videos by *tag* within a given year range returning the results in descending order of added year.
+	```
+	CREATE TABLE videos_by_tag_year (
+		tag text,
+		added_year int,
+		video_id timeuuid,
+		added_date timestamp,
+		description text, 
+		title text,
+		user_id uuid,
+		primary key((tag), added_year, video_id)
+	) WITH CLUSTERING ORDER BY (added_year DESC);
+	```	
+7. Load the data from the *videos_by_tag_year.csv* file into the *videos_by_tag_year* table
+	```
+	COPY videos_by_tag_year FROM 'data/3/videos_by_tag_year.csv' WITH HEADER=true;
+	```
+8. Run queries on the *videos_by_tag_year* table:
+  * `SELECT * FROM videos_by_tag_year WHERE tag = 'trailer' AND added_year = 2015;`
+  * `SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year = 2014;`
+  * `SELECT * FROM videos_by_tag_year WHERE tag = 'cql''
+  * `SELECT * FROM videos_by_tag_year WHERE added_year < 2015;`
 
+	Notes: 
+	The last query result in: *Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. 
+	If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING*
+	
 ### 4. User-defined types and collections
   * Create a user defined type
   * Alter an existing table and add additional columns
@@ -181,7 +238,7 @@ Prerequisites:
 	SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';
 	```
 
-#### Denormalized Tables
+#### 6. Denormalized Tables
   * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
     * Q1: Retrieve videos an actor has appeared in (newest first).
     * Retrieve videos within a particular genre (newest fist).
