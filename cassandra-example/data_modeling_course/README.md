@@ -4,7 +4,7 @@ Prerequisites:
   * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory
 
 
-#### 1. Adding a keyspace and table
+### 1. Adding a keyspace and table
   * Create a keyspace for KillrVideo
   * Create a table to store video metadata
   * Load the data for the video table from a CSV file
@@ -12,7 +12,7 @@ Prerequisites:
 Prerequisites:
 Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
-1. Start ```cqlsh``` on cassandra-node-1 container 
+1. Start the Cassandra tool ```cqlsh``` on *cassandra-node-1* container 
 
 	```docker exec -it cassandra-node-1 cqlsh```
 
@@ -46,10 +46,15 @@ Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\video
 4. Load data from videos.csv into the *videos* table
 
 	`COPY videos FROM 'videos.csv' WITH HEADER=true;`
+	
+	Notes: 
+	`COPY` does not require column names when the target table schema and source csv file columns match respectively.
+	`HEADER=true` - skips the first line in the file
 
-	(`HEADER=true` - skips the first line in the file)
+### 2. Composite Partition Keys
 
-#### User-defined types and collections.
+
+### User-defined types and collections.
 1. Swich to killrvideo keyspace
 USE killrvideo; 
 
