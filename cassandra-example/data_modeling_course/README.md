@@ -14,35 +14,35 @@ Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\video
 
 1. Start `cqlsh` on cassandra-node-1 container 
 
-```docker exec -it cassandra-node-1 cqlsh```
+	```docker exec -it cassandra-node-1 cqlsh```
 
-2. Create *killrvideo* keyspace 
+2. Switch to *killrvideo* keyspace
 
-`CREATE KEYSPACE killrvideo
-WITH REPLICATION = {
-  'class':'SimpleStrategy',
-  'replication_factor':1
-};`
+	`USE killrvideo;`
 
-3. Switch to *killrvideo* keyspace
+3. Create *killrvideo* keyspace 
 
-`USE killrvideo;`
+	`CREATE KEYSPACE killrvideo WITH REPLICATION = {
+	  'class':'SimpleStrategy',
+	  'replication_factor':1
+	};`
+
 
 4. Create a *videos* table
 
-`CREATE TABLE videos (
-	video_id timeuuid,
-	added_date timestamp,
-	description text, 
-	title text,
-	user_id uuid,
-	PRIMARY KEY (video_id)
-);`
+	`CREATE TABLE videos (
+		video_id timeuuid,
+		added_date timestamp,
+		description text, 
+		title text,
+		user_id uuid,
+		PRIMARY KEY (video_id)
+	);`
 
 4. Load data from videos.csv into the *videos* table
-`COPY videos FROM 'videos.csv' WITH HEADER=true;`
+	`COPY videos FROM 'videos.csv' WITH HEADER=true;`
 
-(`HEADER=true` - skips the first line in the file)
+	(`HEADER=true` - skips the first line in the file)
 
 #### User-defined types and collections.
 1. Swich to killrvideo keyspace
