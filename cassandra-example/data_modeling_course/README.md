@@ -10,7 +10,7 @@ Prerequisites:
   * Load the data for the video table from a CSV file
 
 Prerequisites:
-  * Copy videos.csv file to cassandra-node-1 container
+  * Copy videos.csv file to *cassandra-node-1* container
   
  	 ```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
