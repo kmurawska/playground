@@ -16,7 +16,7 @@ Prerequisites:
 
 	```docker exec -it cassandra-node-1 cqlsh```
 
-2. Create *killrvideo* keyspace 
+2. Create a *killrvideo* keyspace 
 
 	```
 	CREATE KEYSPACE killrvideo WITH REPLICATION = {
@@ -25,7 +25,7 @@ Prerequisites:
 	};
 	```
 	
-3. Switch to *killrvideo* keyspace
+3. Switch to the *killrvideo* keyspace
 
 	`USE killrvideo;`
 
@@ -58,6 +58,7 @@ Prerequisites:
 
 
 ### 2. Composite Partition Keys
+  * Create a new table that allows querying videos by title and year using a composite partition key
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
 
@@ -65,8 +66,36 @@ Prerequisites:
 	
 	Notes: 
 	
-	```cqlsh -k keyspace_name``` - use the given keyspace. Equivalent to issuing a USE keyspace command after starting qlsh.
+	```cqlsh -k keyspace_name``` - use the given keyspace, equivalent to issuing a USE keyspace command after starting ```cqlsh```
+	
+2. Create a *videos_by_title_year* table
+		
+	```
+	CREATE TABLE videos_by_title_year (
+		title text,
+		added_year int,
+		added_date timestamp,
+		description text, 
+		user_id uuid,
+		video_id timeuuid,
+		primary key((title, added_year))
+	);
+	```
+3. Load data from videos_by_title_year.csv into the *videos_by_title_year* table
 
+	`COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;`
+
+4. Run following queries on the *videos_by_title_year* table:
+  * ```SELECT * FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND added_year = 2014;```
+  * ```SELECT * FROM videos_by_title_year WHERE title = 'Sleepy Grumpy Cat' AND added_year = 2015;```
+  * ```SELECT * FROM videos_by_title_year WHERE title = 'Grumpy Cat: Slow Motion';```
+  * ```SELECT * FROM videos_by_title_year WHERE added_year = 2015;```
+  
+	Notes: 
+	The last two queries result in:  *Cannot execute this query as it might involve data filtering and thus may have unpredictable 		performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING*. 
+	Cassandra requires all the partition key columns (or none of them) in WHERE condition. Cassandra needs all partition key columns 	to be able to compute the hash which allows to locate the node containing the partition and thus data.
+	
+	
 ### User-defined types and collections.
 1. Swich to killrvideo keyspace
 USE killrvideo; 
