@@ -15,9 +15,11 @@ Prerequisites:
  	 ```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
 1. Start `cqlsh` on cassandra-node-1 container 
+
 ```docker exec -it cassandra-node-1 cqlsh```
 
 2. Create *killrvideo* keyspace 
+
 `CREATE KEYSPACE killrvideo
 WITH REPLICATION = {
   'class':'SimpleStrategy',
@@ -25,9 +27,11 @@ WITH REPLICATION = {
 };`
 
 3. Switch to *killrvideo* keyspace
+
 `USE killrvideo;`
 
 4. Create a *videos* table
+
 `CREATE TABLE videos (
 	video_id timeuuid,
 	added_date timestamp,
@@ -38,7 +42,10 @@ WITH REPLICATION = {
 );`
 
 4. Load data from videos.csv into the *videos* table
-`COPY videos FROM 'videos.csv' WITH HEADER=true;` (header=true - skips the first line in the file)
+
+`COPY videos FROM 'videos.csv' WITH HEADER=true;`
+
+(`HEADER=true` - skips the first line in the file)
 
 #### User-defined types and collections.
 1. Swich to killrvideo keyspace
