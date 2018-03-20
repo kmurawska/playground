@@ -11,6 +11,7 @@ Prerequisites:
 
 Prerequisites:
   * Copy videos.csv file to cassandra-node-1 container
+  
   ```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
 1. Start `cqlsh` for cassandra-node-x container 
