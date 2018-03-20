@@ -3,9 +3,9 @@
 Prerequisites:
   * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory
   * Copy directory *data* which contains files used in exercises to *cassandra-node-1* container
-  
- 	 ```docker cp .\data\ cassandra-node-1:/```
-
+ 	 ```
+	 docker cp .\data\ cassandra-node-1:/
+	 ```
 
 ### 1. Adding a keyspace and table
   * Create a keyspace for KillrVideo
@@ -13,9 +13,9 @@ Prerequisites:
   * Load the data for the video table from a CSV file
 
 1. Start the cassandra tool ```cqlsh``` on *cassandra-node-1* container 
-
-	```docker exec -it cassandra-node-1 cqlsh```
-
+	```
+	docker exec -it cassandra-node-1 cqlsh
+	```
 2. Create a *killrvideo* keyspace 
 	```
 	CREATE KEYSPACE killrvideo WITH REPLICATION = {
@@ -24,11 +24,10 @@ Prerequisites:
 	};
 	```
 3. Switch to the *killrvideo* keyspace
-
-	`USE killrvideo;`
-
-4. Create a *videos* table
-		
+	```
+	USE killrvideo;
+	```
+4. Create a *videos* table	
 	```
 	CREATE TABLE videos (
 		video_id timeuuid,
@@ -39,11 +38,10 @@ Prerequisites:
 		PRIMARY KEY (video_id)
 	);
 	```
-
 4. Load the data from the *videos.csv* file into the *videos* table
-
-	`COPY videos FROM 'data/1/videos.csv' WITH HEADER=true;`
-	
+	```
+	COPY videos FROM 'data/1/videos.csv' WITH HEADER=true;
+	```
 	Notes: 
 	
 	  * `COPY` does not require column names when the target table schema and source csv file columns match respectively.
@@ -59,15 +57,14 @@ Prerequisites:
   * Create a new table that allows querying videos by title and year using a composite partition key
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
-
-	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
-	
+	```
+	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
+	```
 	Notes: 
 	
-	```cqlsh -k keyspace_name``` - use the given keyspace, equivalent to issuing a USE keyspace command after starting ```cqlsh```
+	`cqlsh -k keyspace_name` - use the given keyspace, equivalent to issuing a USE keyspace command after starting ```cqlsh```
 	
 2. Create a *videos_by_title_year* table
-		
 	```
 	CREATE TABLE videos_by_title_year (
 		title text,
@@ -80,26 +77,28 @@ Prerequisites:
 	);
 	```
 3. Load the data from the *videos_by_title_year.csv* file into the *videos_by_title_year* table
-
-	`COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;`
+	```
+	COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;
+	```
 
 4. Run following queries on the *videos_by_title_year* table:
-  * ```SELECT * FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND added_year = 2014;```
-  * ```SELECT * FROM videos_by_title_year WHERE title = 'Sleepy Grumpy Cat' AND added_year = 2015;```
-  * ```SELECT * FROM videos_by_title_year WHERE title = 'Grumpy Cat: Slow Motion';```
-  * ```SELECT * FROM videos_by_title_year WHERE added_year = 2015;```
+  * `SELECT * FROM videos_by_title_year WHERE title = 'Introduction To Apache Cassandra' AND added_year = 2014;`
+  * `SELECT * FROM videos_by_title_year WHERE title = 'Sleepy Grumpy Cat' AND added_year = 2015;`
+  * `SELECT * FROM videos_by_title_year WHERE title = 'Grumpy Cat: Slow Motion';`
+  * `SELECT * FROM videos_by_title_year WHERE added_year = 2015;`
   
 	Notes: 
 	The last two queries result in:  *Cannot execute this query as it might involve data filtering and thus may have unpredictable 		performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING*. 
-	Cassandra requires all the partition key columns (or none of them) in WHERE condition. Cassandra needs all partition key columns 	to be able to compute the hash which allows to locate the node containing the partition and thus data.
+	Cassandra requires all the partition key columns (or none of them) in WHERE condition. Cassandra needs all partition key columns 	 to be able to compute the hash which allows to locate the node containing the partition and thus data.
 
 
 ### 3. Clustering columns
   * Create a *videos_by_tag_year* table that allows range scans and ordering by year
   
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
-
-	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
+	```
+	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
+	```
 
 
 ### 4. User-defined types and collections
@@ -107,39 +106,44 @@ Prerequisites:
   * Alter an existing table and add additional columns
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
-
-	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
-
+	```
+	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
+	```
 2. Erase the data from the videos table
-	```TRUNCATE videos;```
-
+	```
+	TRUNCATE videos;
+	```
 3. Alter the *videos* table to add a *tags* column of the SET type
-	```ALTER TABLE videos ADD tags SET<text>;```
-
+	```
+	ALTER TABLE videos ADD tags SET<text>;
+	```
 4. Load the data from the *videos.csv* into the *videos* table
+	```
+	COPY videos FROM 'data/4/videos.csv' WITH HEADER=true;
+	```
 
-	`COPY videos FROM 'data/4/videos.csv' WITH HEADER=true;`
-
-5. Create a user defined type called *video_encoding*
-		
+5. Create a user defined type called *video_encoding*		
 	```
 	CREATE TYPE video_encoding (
 		bit_rate set<text>,
 		encoding text,
 		height int,
 		width int
-	);
-	```
+	);	```
 
 6. Alter the *videos* table to add an *encoding* column of the *video_encoding* type
-	```ALTER TABLE videos ADD encoding frozen<video_encoding>;```
+	```
+	ALTER TABLE videos ADD encoding frozen<video_encoding>;
+	```
 
 7. Load the data from the *videos_encoding.csv* file into the *videos* table
-
-	`COPY videos (video_id, encoding) FROM 'data/4/videos_encoding.csv' WITH HEADER=true;`
-
+	```
+	COPY videos (video_id, encoding) FROM 'data/4/videos_encoding.csv' WITH HEADER=true;
+	```
 8. Run a query to retrieve the first 10 rows of the videos table:
-	`SELECT * FROM videos LIMIT 10;`
+	```
+	SELECT * FROM videos LIMIT 10;
+	```
 
 
 ### 5. Using counters In CQL
@@ -148,11 +152,10 @@ Prerequisites:
   * Run queries against the table to test counter functionality
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
-
-	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
-	
+	```
+	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
+	```
 2. Create a *videos_count_by_tag* table with a column *video_count* which uses of a counter type to store the video count
-
 	```
 	CREATE TABLE videos_count_by_tag (
 		tag text,
@@ -161,19 +164,22 @@ Prerequisites:
 		primary key((tag), added_year)
 	);
 	```
-
 3. Load the data from the *videos_count_by_tag.cql* file 
-
-	`SOURCE 'data/5/videos_count_by_tag.cql'`
-	
+	```
+	SOURCE 'data/5/videos_count_by_tag.cql'
+	```
 4. Run a query to display each tag and the count of videos for each
-	`SELECT * FROM videos_count_by_tag LIMIT 5;`
-
+	```
+	SELECT * FROM videos_count_by_tag LIMIT 5;
+	```
 5. Add another a tag for another video and increment the video count for this tag
-	`UPDATE videos_count_by_tag SET video_count = video_count + 10 WHERE tag = 'You Are Awesome' AND added_year = 2015;`
-
+	```
+	UPDATE videos_count_by_tag SET video_count = video_count + 10 WHERE tag = 'You Are Awesome' AND added_year = 2015;
+	```
 6. Query the newly added row
-	`SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';`
+	```
+	SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';
+	```
 
 #### Denormalized Tables
   * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
@@ -181,9 +187,9 @@ Prerequisites:
     * Retrieve videos within a particular genre (newest fist).
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
-
-	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
-	
+	```
+	docker exec -it cassandra-node-1 cqlsh -k killrvideo;
+	```
 2. Create a *videos_by_actor* table
 	```
 	CREATE TABLE videos_by_actor (
@@ -199,7 +205,7 @@ Prerequisites:
 		primary key((actor), added_date, video_id, character_name)
 	) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC, character_name ASC);
 	```
-
 3. Load the data from the *videos.csv* into the *videos* table
-
-	`COPY videos_by_actor FROM 'data/6/videos_by_actor.csv' WITH HEADER=true;`
+	```
+	COPY videos_by_actor FROM 'data/6/videos_by_actor.csv' WITH HEADER=true;
+	```
