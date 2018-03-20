@@ -59,6 +59,12 @@ Prerequisites:
 
 ### 2. Composite Partition Keys
 
+1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
+
+	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
+	
+	Notes: 
+	```cqlsh -k keyspace_name`` - use the given keyspace. Equivalent to issuing a USE keyspace command after starting qlsh.
 
 ### User-defined types and collections.
 1. Swich to killrvideo keyspace
