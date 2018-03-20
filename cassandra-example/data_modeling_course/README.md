@@ -1,14 +1,22 @@
 # Data Modeling Course
 
+Prerequisites:
+  * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory
+
+
 #### 1. Adding a keyspace and table
   * Create a keyspace for KillrVideo
   * Create a table to store video metadata
   * Load the data for the video table from a CSV file
 
 Prerequisites:
-  * Copy videos.csv file to cassandra-node-x container
+  * Copy videos.csv file to cassandra-node-1 container
+	```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
-1. Create killrvideo keyspace and switch to that keyspace
+1. Start `cqlsh` for cassandra-node-x container 
+```docker exec -it cassandra-node-x cqlsh```
+
+3. Create killrvideo keyspace and switch to that keyspace
 `CREATE KEYSPACE killrvideo
 WITH REPLICATION = {
   'class':'SimpleStrategy',
@@ -90,6 +98,3 @@ CREATE TABLE videos_by_actor (
 3. Load data from videos_by_actor.csv into the videos_by_actor table
 a) docker cp .\data\6\videos_by_actor.csv cassandra-node-1:/
 b) COPY videos_by_actor FROM 'videos_by_actor.csv' WITH HEADER = true;
-
-
-
