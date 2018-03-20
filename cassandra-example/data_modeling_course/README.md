@@ -64,6 +64,7 @@ Prerequisites:
 	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
 	
 	Notes: 
+	
 	```cqlsh -k keyspace_name``` - use the given keyspace. Equivalent to issuing a USE keyspace command after starting qlsh.
 
 ### User-defined types and collections.
