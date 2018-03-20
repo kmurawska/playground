@@ -178,27 +178,30 @@ Prerequisites:
 	`SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';`
 
 #### Denormalized Tables
-The data model must support the following queries:
-Q1: Retrieve videos an actor has appeared in (newest first).
-Q2: Retrieve videos within a particular genre (newest fist).
+  * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
+    * Q1: Retrieve videos an actor has appeared in (newest first).
+    * Retrieve videos within a particular genre (newest fist).
 
-1. Swich to killrvideo keyspace
-USE killrvideo;
+1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
 
-2. Create a videos_by_actor table
-CREATE TABLE videos_by_actor (
-	actor text,
-	added_date timestamp,
-	video_id timeuuid,
-	character_name text,
-	description text,
-	encoding frozen<video_encoding>,
-	tags set<text>,
-	title text,
-	user_id uuid,
-	primary key((actor), added_date, video_id, character_name)
-) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC, character_name ASC);
+	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
+	
+2. Create a *videos_by_actor* table
+	```
+	CREATE TABLE videos_by_actor (
+		actor text,
+		added_date timestamp,
+		video_id timeuuid,
+		character_name text,
+		description text,
+		encoding frozen<video_encoding>,
+		tags set<text>,
+		title text,
+		user_id uuid,
+		primary key((actor), added_date, video_id, character_name)
+	) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC, character_name ASC);
+	```
 
-3. Load data from videos_by_actor.csv into the videos_by_actor table
-a) docker cp .\data\6\videos_by_actor.csv cassandra-node-1:/
-b) COPY videos_by_actor FROM 'videos_by_actor.csv' WITH HEADER = true;
+3. Load the data from the *videos.csv* into the *videos* table
+
+	`COPY videos_by_actor FROM 'data/6/videos_by_actor.csv' WITH HEADER=true;`
