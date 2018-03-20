@@ -48,7 +48,9 @@ Copy videos.csv file to *cassandra-node-1* container ```docker cp .\data\1\video
 	`COPY videos FROM 'videos.csv' WITH HEADER=true;`
 	
 	Notes: 
+	
 	`COPY` does not require column names when the target table schema and source csv file columns match respectively.
+	
 	`HEADER=true` - skips the first line in the file
 
 ### 2. Composite Partition Keys
