@@ -4,7 +4,7 @@ Prerequisites:
   * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory
   * Copy directory *data* which contains files used in exercises to *cassandra-node-1* container
   
- 	 ```docker cp .\data\1\videos.csv cassandra-node-1:/```
+ 	 ```docker cp .\data\ cassandra-node-1:/```
 
 
 ### 1. Adding a keyspace and table
@@ -44,7 +44,7 @@ Prerequisites:
 
 4. Load data from videos.csv into the *videos* table
 
-	`COPY videos FROM 'videos.csv' WITH HEADER=true;`
+	`COPY videos FROM 'data/1/videos.csv' WITH HEADER=true;`
 	
 	Notes: 
 	
