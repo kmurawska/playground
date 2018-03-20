@@ -4,7 +4,7 @@ Prerequisites:
   * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory
   * Copy directory *data* which contains files used in exercises to *cassandra-node-1* container
   
-  ```docker cp .\data\1\videos.csv cassandra-node-1:/```
+ 	 ```docker cp .\data\1\videos.csv cassandra-node-1:/```
 
 
 ### 1. Adding a keyspace and table
@@ -12,15 +12,11 @@ Prerequisites:
   * Create a table to store video metadata
   * Load the data for the video table from a CSV file
 
-1. Start the Cassandra tool ```cqlsh``` on *cassandra-node-1* container 
+1. Start the cassandra tool ```cqlsh``` on *cassandra-node-1* container 
 
 	```docker exec -it cassandra-node-1 cqlsh```
 
-2. Switch to *killrvideo* keyspace
-
-	`USE killrvideo;`
-
-3. Create *killrvideo* keyspace 
+2. Create *killrvideo* keyspace 
 
 	```
 	CREATE KEYSPACE killrvideo WITH REPLICATION = {
@@ -28,7 +24,10 @@ Prerequisites:
 	  'replication_factor':1
 	};
 	```
+	
+3. Switch to *killrvideo* keyspace
 
+	`USE killrvideo;`
 
 4. Create a *videos* table
 		
