@@ -17,14 +17,12 @@ Prerequisites:
 	```docker exec -it cassandra-node-1 cqlsh```
 
 2. Create a *killrvideo* keyspace 
-
 	```
 	CREATE KEYSPACE killrvideo WITH REPLICATION = {
 	  'class':'SimpleStrategy',
 	  'replication_factor':1
 	};
 	```
-	
 3. Switch to the *killrvideo* keyspace
 
 	`USE killrvideo;`
