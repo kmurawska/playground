@@ -42,7 +42,7 @@ Prerequisites:
 	);
 	```
 
-4. Load data from videos.csv into the *videos* table
+4. Load the data from *videos.csv* file into the *videos* table
 
 	`COPY videos FROM 'data/1/videos.csv' WITH HEADER=true;`
 	
@@ -52,7 +52,7 @@ Prerequisites:
 	
 	  * `HEADER=true` - skips the first line in the file
 	  
-5. Check if data loaded correctly
+5. Check if the data loaded correctly
   * `SELECT * FROM videos LIMIT 10;`
   * `SELECT COUNT(*) FROM videos;`
 
@@ -81,7 +81,7 @@ Prerequisites:
 		primary key((title, added_year))
 	);
 	```
-3. Load data from videos_by_title_year.csv into the *videos_by_title_year* table
+3. Load the data from *videos_by_title_year.csv* file into the *videos_by_title_year* table
 
 	`COPY videos_by_title_year FROM 'data/2/videos_by_title_year.csv' WITH HEADER=true;`
 
@@ -104,40 +104,44 @@ Prerequisites:
 	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
 
 
-	
-### User-defined types and collections.
-1. Swich to killrvideo keyspace
-USE killrvideo; 
+### 4. User-defined types and collections
+  * Create a user defined type
+  * Alter an existing table and add additional columns
+
+1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
+
+	```docker exec -it cassandra-node-1 cqlsh -k killrvideo;```
 
 2. Erase the data from the videos table
-TRUNCATE videos;
+	```TRUNCATE videos;```
 
-3. Alter videos table to add tags column 
-ALTER TABLE videos ADD tags SET<text>;
-DESCRIBE TABLE videos;
+3. Alter the *videos* table to add a *tags* column of the SET type
+	```ALTER TABLE videos ADD tags SET<text>;```
 
-4. Import data from csv file
-a) docker cp .\data\4\videos.csv cassandra-node-1:/
-b) COPY videos FROM 'videos.csv' WITH HEADER=true;
+4. Load the data from *videos.csv* into the *videos* table
 
-5. Create a user defined type video_encoding
-CREATE TYPE video_encoding (
-	bit_rate set<text>,
-	encoding text,
-	height int,
-	width int
-);
+	`COPY videos FROM 'data/4/videos.csv' WITH HEADER=true;`
 
-6. Alter table videos to add an encoding column of the video_encoding type
-ALTER TABLE videos ADD encoding frozen<video_encoding>;
-DESCRIBE TABLE videos;
+5. Create a user defined type called *video_encoding*
+		
+	```
+	CREATE TYPE video_encoding (
+		bit_rate set<text>,
+		encoding text,
+		height int,
+		width int
+	);
+	```
 
-7. Load data from videos_encoding.csv to
-a) docker cp .\data\4\videos_encoding.csv cassandra-node-1:/
-b) COPY videos (video_id, encoding) FROM 'videos_encoding.csv' WITH HEADER=true;
+6. Alter the *videos* table to add an *encoding* column of the *video_encoding* type
+	```ALTER TABLE videos ADD encoding frozen<video_encoding>;```
 
-8. Run queries:
-a) SELECT * FROM videos LIMIT 10;
+7. Load the data from videos_encoding.csv file into the *videos* table
+
+	`COPY videos (video_id, encoding) FROM 'data/4/videos_encoding.csv' WITH HEADER=true;`
+
+8. Run a query to retrieve the first 10 rows of the videos table:
+	`SELECT * FROM videos LIMIT 10;`
 
 #### Denormalized Tables
 The data model must support the following queries:
