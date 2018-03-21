@@ -238,7 +238,7 @@ Prerequisites:
 	SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';
 	```
 
-#### 6. Denormalized Tables
+#### 6. Denormalized tables
   * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
     * Q1: Retrieve videos an actor has appeared in (newest first).
     * Q2: Retrieve videos within a particular genre (newest fist).
