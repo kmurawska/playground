@@ -151,7 +151,7 @@ Prerequisites:
 8. Run queries on the *videos_by_tag_year* table:
   * `SELECT * FROM videos_by_tag_year WHERE tag = 'trailer' AND added_year = 2015;`
   * `SELECT * FROM videos_by_tag_year WHERE tag = 'cql' AND added_year = 2014;`
-  * `SELECT * FROM videos_by_tag_year WHERE tag = 'cql''
+  * `SELECT * FROM videos_by_tag_year WHERE tag = 'cql'`
   * `SELECT * FROM videos_by_tag_year WHERE added_year < 2015;`
 
 	Notes: 
@@ -186,8 +186,8 @@ Prerequisites:
 		encoding text,
 		height int,
 		width int
-	);	```
-
+	);	
+	```
 6. Alter the *videos* table to add an *encoding* column of the *video_encoding* type
 	```
 	ALTER TABLE videos ADD encoding frozen<video_encoding>;
@@ -241,7 +241,7 @@ Prerequisites:
 #### 6. Denormalized Tables
   * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
     * Q1: Retrieve videos an actor has appeared in (newest first).
-    * Retrieve videos within a particular genre (newest fist).
+    * Q2: Retrieve videos within a particular genre (newest fist).
 
 1. Start the cassandra tool ```cqlsh``` and use *killrvideo* keyspace
 	```
@@ -262,7 +262,32 @@ Prerequisites:
 		primary key((actor), added_date, video_id, character_name)
 	) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC, character_name ASC);
 	```
-3. Load the data from the *videos.csv* into the *videos* table
+3. Load the data from the *videos_by_actor.csv* into the *videos_by_actor* table
 	```
 	COPY videos_by_actor FROM 'data/6/videos_by_actor.csv' WITH HEADER=true;
+	```
+4. Run a query to retrieve the video information for a particular actor
+  * `SELECT * FROM videos_by_actor WHERE actor = 'Tom Hanks';`
+  * `SELECT actor, added_date FROM videos_by_actor WHERE actor = 'Tom Hanks';`	    
+6. Create a *videos_by_genre* table
+	```
+	CREATE TABLE videos_by_genre (
+		genre text,
+		added_date timestamp,
+		video_id timeuuid,
+		description text,
+		encoding frozen<video_encoding>,
+		tags set<text>,
+		title text,
+		user_id uuid,
+		primary key((genre), added_date, video_id)
+	) WITH CLUSTERING ORDER BY (added_date DESC, video_id ASC);
+	```
+7. Load the data from the *videos_by_genre.csv* into the *videos_by_genre* table
+	```
+	COPY videos_by_genre FROM 'data/6/videos_by_genre.csv' WITH HEADER=true;
+	```
+8. Run a query to retrieve the video information for a particular genre
+    ```
+	SELECT * FROM videos_by_genre WHERE genre IN ('Future noir', 'Time travel');
 	```
