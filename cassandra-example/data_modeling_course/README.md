@@ -1,4 +1,5 @@
-# Data Modeling Course
+#[ Data Modeling Course](https://academy.datastax.com/resources/ds220-data-modeling)
+
 
 Prerequisites:
   * Up docker-compose (at least one cassandra node, in this example cassandra-node-1 is used) from the parent directory.
