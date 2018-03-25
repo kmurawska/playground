@@ -1,4 +1,5 @@
-#[ Data Modeling Course](https://academy.datastax.com/resources/ds220-data-modeling)
+#Data Modeling Course
+(https://academy.datastax.com/resources/ds220-data-modeling)
 
 
 Prerequisites:
