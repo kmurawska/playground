@@ -237,7 +237,7 @@ Prerequisites:
 	SELECT * FROM videos_count_by_tag WHERE tag = 'You Are Awesome';
 	```
 
-#### 6. Denormalized tables
+### 6. Denormalized tables
   * Create tables to support querying for videos by actor or genre. The data model must support the following queries:
     * Q1: Retrieve videos an actor has appeared in (newest first).
     * Q2: Retrieve videos within a particular genre (newest fist).
@@ -292,7 +292,7 @@ Prerequisites:
 	```
 	
 
-#### 16. Finalizing physical data modeling
+### 16. Finalizing physical data modeling
 1. Start the cassandra tool ```cqlsh```.
 	```
 	docker exec -it cassandra-node-1 cqlsh;
