@@ -8,29 +8,29 @@ import com.datastax.driver.core.utils.UUIDs;
 import java.util.UUID;
 
 import static com.kmurawska.playground.cassandraexample.CassandraConnection.CASSANDRA_CONNECTION;
-import static com.kmurawska.playground.cassandraexample.lwt.Keyspace.PRODUCTS_TABLE;
+import static com.kmurawska.playground.cassandraexample.lwt.Keyspace.SENSORS_TABLE;
 
-class ProductRepository {
+class SensorsRepository {
     private final Session session;
 
-    ProductRepository() {
+    SensorsRepository() {
         this.session = CASSANDRA_CONNECTION.getSession();
     }
 
-    Product findByUUID(UUID productId) {
+    Sensor findByUUID(UUID sensorId) {
         BoundStatement statement = new BoundStatement(session.prepare(
-                "SELECT * FROM " + PRODUCTS_TABLE + " WHERE product_id = ? "
-        )).bind(productId);
+                "SELECT * FROM " + SENSORS_TABLE + " WHERE sensor_id = ? "
+        )).bind(sensorId);
 
         ResultSet result = this.session.execute(statement);
 
-        return new Product(result.one());
+        return new Sensor(result.one());
     }
 
-    void save(final Product product) {
+    void save(final Sensor sensor) {
         BoundStatement statement = new BoundStatement(session.prepare(
-                "INSERT INTO " + PRODUCTS_TABLE + " (product_id, name, description, price, version) VALUES (?, ?, ?, ?, ?) IF NOT EXISTS;"
-        )).bind(product.getProductId(), product.getName(), product.getDescription(), product.getPrice(), product.getVersion());
+                "INSERT INTO " + SENSORS_TABLE + " (sensor_id, type, version) VALUES (?, ?, ?) IF NOT EXISTS;"
+        )).bind(sensor.getSensorId(), sensor.getType(), sensor.getVersion());
 
         ResultSet result = this.session.execute(statement);
 
@@ -38,10 +38,10 @@ class ProductRepository {
             throw new IllegalStateException("Row has been added by another user.");
     }
 
-    void update(final Product product) {
+    void update(final Sensor sensor) {
         BoundStatement statement = new BoundStatement(session.prepare(
-                "UPDATE " + PRODUCTS_TABLE + " SET price = ?, version = ? WHERE product_id =? AND name = ? IF version = ?;"
-        )).bind(product.getPrice(), UUIDs.timeBased(), product.getProductId(), product.getName(), product.getVersion());
+                "UPDATE " + SENSORS_TABLE + " SET value = ?, version = ? WHERE sensor_id = ? IF version = ?;"
+        )).bind(sensor.getValue(), UUIDs.timeBased(), sensor.getSensorId(), sensor.getVersion());
 
         ResultSet result = this.session.execute(statement);
 

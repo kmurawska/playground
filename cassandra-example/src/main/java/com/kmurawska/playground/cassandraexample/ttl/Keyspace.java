@@ -1,12 +1,12 @@
-package com.kmurawska.playground.cassandraexample.lwt;
+package com.kmurawska.playground.cassandraexample.ttl;
 
 import com.datastax.driver.core.Session;
 
 import static com.kmurawska.playground.cassandraexample.CassandraConnection.CASSANDRA_CONNECTION;
 
 public class Keyspace {
-    private static final String KEYSPACE = "lwt";
-    static final String SENSORS_TABLE = "lwt.sensors";
+    private static final String KEYSPACE = "ttl";
+    static final String TEMPERATURE_TABLE = "ttl.temperature_measurement";
     private final Session session;
 
     Keyspace() {
@@ -26,13 +26,13 @@ public class Keyspace {
 
     private void createTables() {
         this.session.execute(
-                "CREATE TABLE IF NOT EXISTS " + SENSORS_TABLE + " (" +
-                        "sensor_id UUID," +
-                        "type TEXT," +
+                "CREATE TABLE IF NOT EXISTS " + TEMPERATURE_TABLE + " (" +
+                        "temperature_measurement_id UUID," +
+                        "weather_station_id UUID," +
                         "value DECIMAL," +
-                        "version TIMEUUID," +
-                        "PRIMARY KEY (sensor_id)" +
-                        ");"
+                        "recorded_at TIMESTAMP," +
+                        "PRIMARY KEY ((weather_station_id), recorded_at)" +
+                        ") WITH CLUSTERING ORDER BY (recorded_at DESC);"
         );
     }
 
@@ -43,7 +43,7 @@ public class Keyspace {
 
     private void dropTables() {
         this.session.execute(
-                "DROP TABLE IF EXISTS " + SENSORS_TABLE
+                "DROP TABLE IF EXISTS " + TEMPERATURE_TABLE
         );
     }
 

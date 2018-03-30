@@ -2,6 +2,7 @@ package com.kmurawska.playground.cassandraexample;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.extras.codecs.jdk8.InstantCodec;
 
 public enum CassandraConnection {
     CASSANDRA_CONNECTION;
@@ -15,6 +16,7 @@ public enum CassandraConnection {
             cluster = Cluster.builder()
                     .addContactPoints(CONTACT_POINT)
                     .build();
+            cluster.getConfiguration().getCodecRegistry().register(InstantCodec.instance);
             session = cluster.connect();
         }
     }
