@@ -17,12 +17,17 @@ export default class AxisX extends React.Component {
     }
 
     renderAxis() {
-        let xAxis = d3.axisBottom(this.props.x).tickValues(this.props.data.map((d) => {
-            return d.date
-        })).ticks(4);
+        let xAxis = d3.axisBottom(this.props.x)
+            .tickValues(this.props.data.map((d) => {return d.date}))
+            .ticks(4)
+            .tickFormat(d3.timeFormat("%d-%m-%Y"));
 
         let node = ReactDOM.findDOMNode(this);
-        d3.select(node).call(xAxis);
+        d3.select(node).call(xAxis).selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", () => { return "rotate(-65)"});
     }
 
     render() {

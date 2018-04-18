@@ -37,11 +37,13 @@ export default class App extends React.Component {
     render() {
         this.enrichSourceDataWithParsedDate();
 
-        let x = d3.scaleTime().domain(d3.extent(data, d => {
-            return d.date
-        })).rangeRound([0, this.state.width]);
+        let x = d3.scaleTime()
+            .domain(d3.extent(data, d => {return d.date}))
+            .rangeRound([0, this.state.width]);
 
-        let y = d3.scaleLinear().domain([0,  this.maxValueX() + 50]).range([this.state.height, 0]);
+        let y = d3.scaleLinear()
+            .domain([0,  this.maxValueY() + 50])
+            .range([this.state.height, 0]);
 
         let line = d3.line()
             .x(d => {
@@ -54,7 +56,6 @@ export default class App extends React.Component {
 
         return (
             <div>
-                <h4>Europe Weather Conditions: 11.04.2018</h4>
                 <div>
                     <svg id="line_chart" width={this.state.svgWidth} height={this.state.svgHeight}>
                         <g transform={'translate(' + this.state.margin.left + ',' + this.state.margin.top + ')'}>
@@ -71,14 +72,14 @@ export default class App extends React.Component {
     }
 
     enrichSourceDataWithParsedDate() {
-        let parseDate = d3.timeParse("%m-%d-%Y");
+        let parseDate = d3.timeParse("%d-%m-%Y");
 
         data.forEach(d => {
             d.date = parseDate(d.day);
         });
     }
 
-    maxValueX() {
+    maxValueY() {
         return d3.max(data, d => {
             return d.value
         })
