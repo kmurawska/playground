@@ -24,13 +24,6 @@ class TimeSeries {
         this.value = value;
     }
 
-    Document toDocument() {
-        return new Document()
-                .append("uuid", uuid)
-                .append("recordedAt", recordedAt)
-                .append("value", value);
-    }
-
     static List<TimeSeries> fromDocument(List<Document> documents) {
         return documents.stream()
                 .map(TimeSeries::fromDocument)
@@ -43,5 +36,21 @@ class TimeSeries {
                 LocalDate.ofInstant(document.getDate("recordedAt").toInstant(), ZoneId.systemDefault()),
                 document.getDouble("mean")
         );
+    }
+
+    Document toDocument() {
+        return new Document()
+                .append("uuid", uuid)
+                .append("recordedAt", recordedAt)
+                .append("value", value);
+    }
+
+    @Override
+    public String toString() {
+        return "TimeSeries{" +
+                "uuid='" + uuid + '\'' +
+                ", recordedAt=" + recordedAt +
+                ", value=" + value +
+                '}';
     }
 }

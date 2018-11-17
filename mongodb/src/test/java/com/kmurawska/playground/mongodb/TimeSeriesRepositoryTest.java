@@ -6,7 +6,6 @@ class TimeSeriesRepositoryTest {
 
     private CountryRepository repository = new CountryRepository();
 
-
     @Test
     void insertTimeSeries() {
         repository.insert(new CountryReader().read());
@@ -19,7 +18,12 @@ class TimeSeriesRepositoryTest {
 
     @Test
     void findAll() {
-        repository.findAll().forEach(System.out::println);
+        repository.findAll().stream()
+                .map(c -> {
+                    System.out.println(c);
+                    return c.getTemperature();
+                })
+                .forEach(System.out::println);
     }
 
     @Test
@@ -27,5 +31,4 @@ class TimeSeriesRepositoryTest {
         repository.deleteAll();
         System.out.println(repository.count());
     }
-
 }

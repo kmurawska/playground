@@ -33,21 +33,18 @@ class CountryReader {
         }
     }
 
-    private Stream<String> readLines(Path file) {
+    private List<String> readLines(Path file) {
         try {
-            return Files.lines(file);
+            return Files.lines(file).collect(toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Country toCountry(Stream<String> lines) {
-        Country country = lines.findFirst()
-                .map(this::split)
-                .map(this::toCountry)
-                .orElse(Country.UNKNOWN_COUNTRY);
+    private Country toCountry(List<String> lines) {
+        Country country = toCountry(lines.get(0).split(SEPARATOR));
 
-        List<TimeSeries> timeSeries = lines
+        List<TimeSeries> timeSeries = lines.stream()
                 .skip(2)
                 .map(this::split)
                 .map(this::toTimeSeries)

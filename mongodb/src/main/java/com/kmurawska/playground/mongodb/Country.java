@@ -22,9 +22,21 @@ class Country {
         this.code = code;
     }
 
+    static Country fromDocument(Document document) {
+        return new Country(
+                document.getString("uuid"),
+                document.getString("name"),
+                document.getString("code")
+        ).withTemperature(TimeSeries.fromDocument((List<Document>) document.get("temperature")));
+    }
+
     Country withTemperature(List<TimeSeries> temperature) {
         this.temperature = temperature;
         return this;
+    }
+
+    public List<TimeSeries> getTemperature() {
+        return temperature;
     }
 
     Document toDocument() {
@@ -35,11 +47,13 @@ class Country {
                 .append("temperature", temperature.stream().map(TimeSeries::toDocument).collect(toList()));
     }
 
-    static Country fromDocument(Document document) {
-        return new Country(
-                document.getString("uuid"),
-                document.getString("name"),
-                document.getString("code")
-        ).withTemperature(TimeSeries.fromDocument((List<Document>) document.get("temperature")));
+    @Override
+    public String toString() {
+        return "Country{" +
+                "uuid='" + uuid + '\'' +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", temperature=" + temperature.size() +
+                '}';
     }
 }
