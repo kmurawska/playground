@@ -51,4 +51,39 @@ class CountryRepository {
     void deleteAll() {
         collection.deleteMany(new BsonDocument());
     }
+
+
+    List<AverageTemperatureForCountry> countAverageTemperaturePerCountry() {
+
+        String map = "function() { " +
+                "for(var i in this.temperature) {" +
+                    "emit(this.code, this.temperature[i].value); " +
+                "}}";
+
+        String reduce = "function(code, temperature) {return Array.sum(temperature)/temperature.length; }";
+
+        try (Stream<Document> documents = stream(collection.mapReduce(map, reduce).spliterator(), false)) {
+            return documents
+                    .map(AverageTemperatureForCountry::fromDocument)
+                    .collect(toList());
+        }
+    }
+
+    double countAverageTemperatureForAllCountries() {
+        String map = "function() { " +
+                "var sum = 0;" +
+                    "for(var i in this.temperature) {" +
+                    "sum += this.temperature[i].value;" +
+                "}" +
+                "var countryAverage = sum/this.temperature.length; "  +
+                "emit(this.code, countryAverage); }";
+
+        String reduce = "function(code, countryAverage) {return Array.sum(value); }";
+
+        try (Stream<Document> documents = stream(collection.mapReduce(map, reduce).spliterator(), false)) {
+            return documents
+                    .mapToDouble(d -> d.getDouble("value"))
+                    .average().orElseThrow(RuntimeException::new);
+        }
+    }
 }

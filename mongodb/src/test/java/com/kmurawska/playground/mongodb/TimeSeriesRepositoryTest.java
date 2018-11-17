@@ -31,4 +31,14 @@ class TimeSeriesRepositoryTest {
         repository.deleteAll();
         System.out.println(repository.count());
     }
+
+    @Test
+    void countAverageTemperatureForCountries() {
+        repository.countAverageTemperaturePerCountry().forEach(System.out::println);
+    }
+
+    @Test
+    void countAverageTemperatureForAllCountries() {
+        System.out.println(repository.countAverageTemperatureForAllCountries());
+    }
 }

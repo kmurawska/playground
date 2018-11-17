@@ -35,7 +35,7 @@ class Country {
         return this;
     }
 
-    public List<TimeSeries> getTemperature() {
+    List<TimeSeries> getTemperature() {
         return temperature;
     }
 
