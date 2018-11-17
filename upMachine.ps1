@@ -15,10 +15,6 @@ if ($dockerMachines -Like "*playground*") {
 	&docker-machine env $machineName | Invoke-Expression
 	echo "Docker machine created."
 	
-	echo "Fixing incorrect network adapter type..."
-	docker-machine stop $machineName
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" modifyvm playground --nictype1 Am79C973
-	echo "Network adapter type fixed."
 
     echo "Adding shared folders..."
     $playground = [System.IO.Path]::GetFullPath((Join-Path (pwd) '..\playground'))
