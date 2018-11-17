@@ -14,7 +14,6 @@ if ($dockerMachines -Like "*playground*") {
 	docker-machine env $machineName
 	&docker-machine env $machineName | Invoke-Expression
 	echo "Docker machine created."
-	
 
     echo "Adding shared folders..."
     $playground = [System.IO.Path]::GetFullPath((Join-Path (pwd) '..\playground'))
@@ -27,6 +26,7 @@ if ($dockerMachines -Like "*playground*") {
 	echo "Setting ports forwarding on Oracle VirtualBox machine..."
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,9042,,9042"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra JMX,tcp,,7199,,7199"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "mongodb,tcp,,27017,,27017"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName
