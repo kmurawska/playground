@@ -1,0 +1,19 @@
+<div id="content">
+    <h1>The Witcher characters</h1>
+    <table>
+        <tr>
+            <td>Id</td>
+            <td>Recorded at</td>
+            <td>Value</td>
+            <td>Code</td>
+        </tr>
+        {{#.}}
+        <tr>
+            <td>{{uuid}}</td>
+            <td>{{recordedAt}}</td>
+            <td>{{value}}</td>
+            <td>{{code}}</td>
+        </tr>
+        {{/.}}
+    </table>
+</div>
