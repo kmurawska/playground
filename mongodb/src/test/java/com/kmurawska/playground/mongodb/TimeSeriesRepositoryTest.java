@@ -8,7 +8,7 @@ class TimeSeriesRepositoryTest {
 
     @Test
     void insertTimeSeries() {
-        repository.insert(new CountryReader().read());
+        repository.insert(new TemperatureDataLoader().load());
     }
 
     @Test

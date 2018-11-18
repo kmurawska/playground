@@ -14,10 +14,10 @@ import static java.lang.Integer.parseInt;
 import static java.nio.file.Files.list;
 import static java.util.stream.Collectors.toList;
 
-class CountryReader {
+class TemperatureDataLoader {
     private static final String SEPARATOR = ",";
 
-    List<Country> read() {
+    List<Country> load() {
         try (Stream<Path> files = filesInDirectory()) {
             return files.map(this::readLines)
                     .map(this::toCountry)
@@ -27,7 +27,7 @@ class CountryReader {
 
     private Stream<Path> filesInDirectory() {
         try {
-            return list(Paths.get(Objects.requireNonNull(CountryReader.class.getClassLoader().getResource("temperature")).toURI()));
+            return list(Paths.get(Objects.requireNonNull(TemperatureDataLoader.class.getClassLoader().getResource("temperature")).toURI()));
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
