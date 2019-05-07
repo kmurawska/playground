@@ -27,6 +27,8 @@ if ($dockerMachines -Like "*playground*") {
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra CQL,tcp,,9042,,9042"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "cassandra JMX,tcp,,7199,,7199"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "mongodb,tcp,,27017,,27017"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "rabbitmq,tcp,,5672,,5672"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "rabbitmq2,tcp,,15672,,15672"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName
