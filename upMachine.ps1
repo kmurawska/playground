@@ -29,6 +29,7 @@ if ($dockerMachines -Like "*playground*") {
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "mongodb,tcp,,27017,,27017"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "rabbitmq,tcp,,5672,,5672"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "rabbitmq2,tcp,,15672,,15672"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "spring-application1,tcp,,8080,,8080"
 	echo "Setting ports forwarding finished."
 
     docker-machine env $machineName

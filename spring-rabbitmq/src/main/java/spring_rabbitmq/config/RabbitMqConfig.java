@@ -1,4 +1,4 @@
-package spring_rabbitmq;
+package spring_rabbitmq.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -7,15 +7,15 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import spring_rabbitmq.MessageReceiver;
 
-@SpringBootApplication
-public class Application {
-    static final String TOPIC_NAME = "TOPIC_NAME";
-    static final String QUEUE_NAME = "QUEUE_NAME";
-    static final String ROUTING_KEY = "com.kmurawska.playground.spring_rabbitmq.";
+@Configuration
+public class RabbitMqConfig {
+    public static final String TOPIC_NAME = "TOPIC_NAME";
+    private static final String QUEUE_NAME = "QUEUE_NAME";
+    public static final String ROUTING_KEY = "ROUTING_KEY";
 
     @Bean
     Queue queue() {
@@ -29,7 +29,7 @@ public class Application {
 
     @Bean
     Binding binding(Queue queue, TopicExchange topic) {
-        return BindingBuilder.bind(queue).to(topic).with(ROUTING_KEY + "#");
+        return BindingBuilder.bind(queue).to(topic).with(ROUTING_KEY);
     }
 
     @Bean
@@ -44,9 +44,5 @@ public class Application {
     @Bean
     MessageListenerAdapter listenerAdapter(MessageReceiver messageReceiver) {
         return new MessageListenerAdapter(messageReceiver, "receive");
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args).close();
     }
 }
