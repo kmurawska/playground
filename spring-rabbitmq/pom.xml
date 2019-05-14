@@ -10,9 +10,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -24,7 +21,6 @@
             <version>2.1.0.RELEASE</version>
         </dependency>
     </dependencies>
-
 
     <build>
         <finalName>spring-rabbitmq</finalName>
@@ -40,6 +36,77 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                  <groupId>io.fabric8</groupId>
+                  <artifactId>docker-maven-plugin</artifactId>
+                  <version>0.30.0</version>
+                  <configuration>
+                      <images>
+                          <image>
+                              <name>${project.artifactId}</name>
+                          </image>
+                      </images>
+                  </configuration>
+                  <executions>
+                      <execution>
+                          <id>stop-containers</id>
+                          <phase>clean</phase>
+                          <goals>
+                              <goal>stop</goal>
+                          </goals>
+                          <configuration>
+                              <allContainers>true</allContainers>
+                          </configuration>
+                      </execution>
+                      <execution>
+                          <id>build-image</id>
+                          <phase>package</phase>
+                          <goals>
+                              <goal>build</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+              </plugin>
+
+           <!-- <plugin>
+                <groupId>com.dkanejs.maven.plugins</groupId>
+                <artifactId>docker-compose-maven-plugin</artifactId>
+                <version>2.4.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>up</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>up</goal>
+                        </goals>
+                        <configuration>
+                            <imageToRemove>spring-rabbitmq</imageToRemove>
+                            <containerNameToRemove>spring-rabbitmq</containerNameToRemove>
+                            <build>true</build>
+                            <services>
+                                <service>application1</service>
+                            </services>
+                            <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                            <detachedMode>true</detachedMode>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>down</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>down</goal>
+                        </goals>
+                        <configuration>
+                            <services>
+                                <service>application1</service>
+                            </services>
+                            <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                            <removeVolumes>true</removeVolumes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+
         </plugins>
     </build>
 </project>

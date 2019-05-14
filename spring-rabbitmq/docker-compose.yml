@@ -21,7 +21,7 @@ services:
   application1:
     build: .
     container_name: application1
-    image: application1
+    image: spring-rabbitmq
     ports:
       - 8080:8080
     networks:
