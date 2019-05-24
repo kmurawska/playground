@@ -7,17 +7,20 @@ import spring_rabbitmq.direct_exchange.Color;
 import spring_rabbitmq.direct_exchange.DirectExchangeMessageProducer;
 import spring_rabbitmq.fanout_exchange.FanoutExchangeMessageProducer;
 import spring_rabbitmq.queues.QueueMessageProducer;
+import spring_rabbitmq.topic_exchange.TopicExchangeMessageProducer;
 
 @RestController
 public class MessageController {
     private final QueueMessageProducer queueMessageProducer;
     private final FanoutExchangeMessageProducer fanoutExchangeMessageProducer;
     private final DirectExchangeMessageProducer directExchangeMessageProducer;
+    private final TopicExchangeMessageProducer topicExchangeMessageProducer;
 
-    public MessageController(QueueMessageProducer queueMessageProducer, FanoutExchangeMessageProducer fanoutExchangeMessageProducer, DirectExchangeMessageProducer directExchangeMessageProducer) {
+    public MessageController(QueueMessageProducer queueMessageProducer, FanoutExchangeMessageProducer fanoutExchangeMessageProducer, DirectExchangeMessageProducer directExchangeMessageProducer, TopicExchangeMessageProducer topicExchangeMessageProducer) {
         this.queueMessageProducer = queueMessageProducer;
         this.fanoutExchangeMessageProducer = fanoutExchangeMessageProducer;
         this.directExchangeMessageProducer = directExchangeMessageProducer;
+        this.topicExchangeMessageProducer = topicExchangeMessageProducer;
     }
 
     @GetMapping("/queue")
@@ -30,8 +33,13 @@ public class MessageController {
         fanoutExchangeMessageProducer.sendRandomMessage();
     }
 
-    @GetMapping("/direct-exchange/{routing-key}")
+    @GetMapping("/direct-exchange/routing-key={routing-key}")
     public void sendRandomMessageToDirectExchange(@PathVariable("routing-key") Color routingKey) {
         directExchangeMessageProducer.sendRandomMessageWithRoutingKey(routingKey);
+    }
+
+    @GetMapping("/topic-exchange/routing-key={routing-key}")
+    public void sendRandomMessageToTopicExchange(@PathVariable("routing-key") String routingKey) {
+        topicExchangeMessageProducer.sendRandomMessageWithRoutingKey(routingKey);
     }
 }

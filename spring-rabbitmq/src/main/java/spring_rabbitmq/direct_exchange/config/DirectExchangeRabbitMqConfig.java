@@ -27,14 +27,14 @@ public class DirectExchangeRabbitMqConfig {
     }
 
     @Bean
-    public Binding exchangeToQueue1BindingForOrangeMessages(DirectExchange exchange, Queue queue1ForDirectExchange) {
+    public Binding queue1BindingForOrangeMessages(DirectExchange exchange, Queue queue1ForDirectExchange) {
         return BindingBuilder.bind(queue1ForDirectExchange)
                 .to(exchange)
                 .with(Color.ORANGE.name());
     }
 
     @Bean
-    public Binding exchangeToQueue1BindingForBlackMessages(DirectExchange exchange, Queue queue1ForDirectExchange) {
+    public Binding queue1BindingForBlackMessages(DirectExchange exchange, Queue queue1ForDirectExchange) {
         return BindingBuilder.bind(queue1ForDirectExchange)
                 .to(exchange)
                 .with(Color.BLACK.name());
