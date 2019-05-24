@@ -10,16 +10,16 @@ import java.util.UUID;
 public class FanoutExchangeMessageProducer {
     private static final String ROUTING_KEY = "";
     private final RabbitTemplate rabbitTemplate;
-    private final FanoutExchange fanout;
+    private final FanoutExchange exchange;
 
-    public FanoutExchangeMessageProducer(RabbitTemplate rabbitTemplate, FanoutExchange fanout) {
+    public FanoutExchangeMessageProducer(RabbitTemplate rabbitTemplate, FanoutExchange exchange) {
         this.rabbitTemplate = rabbitTemplate;
-        this.fanout = fanout;
+        this.exchange = exchange;
     }
 
     public void sendRandomMessage() {
         String message = UUID.randomUUID().toString();
         System.out.println("Sending message...: " + message);
-        rabbitTemplate.convertAndSend(fanout.getName(), ROUTING_KEY, message);
+        rabbitTemplate.convertAndSend(exchange.getName(), ROUTING_KEY, message);
     }
 }

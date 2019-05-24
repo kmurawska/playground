@@ -8,6 +8,6 @@ import spring_rabbitmq.queues.config.SimpleQueueRabbitMqConfig;
 public class QueueMessageListener {
     @RabbitHandler
     public void onMessage(String message) {
-        System.out.println("Received message: " + message);
+        System.out.println(this.getClass().getName() + " " + "received message: " + message);
     }
 }
