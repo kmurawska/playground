@@ -1,0 +1,29 @@
+version: '3'
+
+networks:
+  rabbitmq:
+
+services:
+
+  rabbitmq:
+    image: rabbitmq-web-stomp
+    container_name: rabbitmq
+    hostname: rabbitmq
+    expose:
+      - 8333
+      - 5672
+      - 15672
+    ports:
+      - 5672:5672
+      - 15674:15674
+    networks:
+      - rabbitmq
+
+  application1:
+    build: .
+    container_name: application1
+    image: application1
+    ports:
+      - 8080:8080
+    networks:
+      - rabbitmq
