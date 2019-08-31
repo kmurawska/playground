@@ -2,7 +2,7 @@ package rabbitmq.control.queue;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-import rabbitmq.configuration.QueueRabbitMqConfig;
+import rabbitmq.configuration.NamedQueueRabbitMqConfig;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public class QueueMessageProducer {
     public void sendRandomMessage() {
         String message = UUID.randomUUID().toString();
         System.out.println("Sending message...: " + message);
-        rabbitTemplate.convertAndSend(QueueRabbitMqConfig.QUEUE_NAME_1, message);
-        rabbitTemplate.convertAndSend(QueueRabbitMqConfig.QUEUE_NAME_2, message);
+        rabbitTemplate.convertAndSend(NamedQueueRabbitMqConfig.QUEUE_NAME_1, message);
+        rabbitTemplate.convertAndSend(NamedQueueRabbitMqConfig.QUEUE_NAME_2, message);
     }
 }

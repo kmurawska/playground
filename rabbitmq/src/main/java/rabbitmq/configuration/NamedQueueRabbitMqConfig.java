@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import rabbitmq.control.queue.QueueMessageListener;
 
 @Configuration
-public class QueueRabbitMqConfig {
+public class NamedQueueRabbitMqConfig {
     public static final String QUEUE_NAME_1 = "QUEUE_1";
-    public static final String QUEUE_NAME_2 = "QUEUE_2";
+    public static final String QUEUE_NAME_2 = "QUEUE_22";
 
     @Bean
     Queue namedQueue1() {

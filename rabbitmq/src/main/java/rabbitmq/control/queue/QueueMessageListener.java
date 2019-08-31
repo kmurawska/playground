@@ -2,9 +2,9 @@ package rabbitmq.control.queue;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import rabbitmq.configuration.QueueRabbitMqConfig;
+import rabbitmq.configuration.NamedQueueRabbitMqConfig;
 
-@RabbitListener(queues = QueueRabbitMqConfig.QUEUE_NAME_1)
+@RabbitListener(queues = NamedQueueRabbitMqConfig.QUEUE_NAME_1)
 public class QueueMessageListener {
     @RabbitHandler
     public void onMessage(String message) {

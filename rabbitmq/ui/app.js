@@ -8,12 +8,11 @@ function subscribeToEvents() {
 
 function onConnect(client) {
     console.log("connected");
-    console.log(event);
     subscribe(client);
 }
 
 function subscribe(client) {
-  //  subscribeToNamedQueue(client);
+    subscribeToNamedQueue(client);
     subscribeToFanoutExchange(client);
     subscribeToDirectExchange(client);
     subscribeToTopicExchange(client);
